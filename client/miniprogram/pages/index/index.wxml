@@ -1,0 +1,13 @@
+<scroll-view class="view-barrage" scroll-top="{{bottomDist}}" scroll-y bindscroll="scrollScreen" bindscrolltolower="screenToLower">
+  <view class="item" wx:for="{{msgList}}" wx:key="{{index}}">
+    <image src="../../images/avatar.png" />
+    <view class="nickname">{{item.nickname}}：</view>
+    <view class="text">{{item.text}}</view>
+  </view>
+  <view id="isBottom"> </view>
+</scroll-view>
+<view class="input-area">
+  <image src="../../images/avatar.png" />
+  <input type="text" value="{{inputMsg}}" cursor-spacing="20rpx" confirm-type="发送" bindconfirm="sendMsg" placeholder="发条弹幕呗~~~" bindinput="bindMsgText"/>
+  <button bindtap="sendMsg">发送</button>
+</view>
