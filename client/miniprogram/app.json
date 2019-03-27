@@ -1,11 +1,12 @@
 {
   "pages":[
-    "pages/index/index"
+    "pages/index/index",
+    "pages/room/room"
   ],
   "window":{
     "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#27ae60",
     "navigationBarTitleText": "弹幕机",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle":"white"
   }
 }

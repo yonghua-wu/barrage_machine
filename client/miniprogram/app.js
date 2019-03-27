@@ -1,10 +1,21 @@
+const request = require('./utils/request.js')
+// import request from './utils/request.js'
+// eslint-disable-next-line no-undef
 App({
 
   /**
    * 当小程序初始化完成时，会触发 onLaunch（全局只触发一次）
    */
   onLaunch: function () {
-    
+    wx.checkSession({
+      success() {
+        // session_key 未过期，并且在本生命周期一直有效
+      },
+      fail() {
+        // session_key 已经失效，需要重新执行登录流程
+        request.login()
+      }
+    })
   },
 
   /**

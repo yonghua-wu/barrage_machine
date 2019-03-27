@@ -1,76 +1,63 @@
-.view-barrage {
+
+
+
+
+.join-room {
   box-sizing: border-box;
-  width:100%;
-  height: calc(100vh - 110rpx);
+  margin-top: 30vh;
   font-size: 30rpx;
-  padding: 0rpx 30rpx;
   display: flex;
   flex-direction: column;
-}
-.view-barrage .item {
-  padding: 10rpx 0rpx;
+  align-items: center;
   width: 100%;
+  padding: 40rpx;
 }
-.view-barrage .item image {
-  width: 40rpx;
-  height: 40rpx;
-  margin-right: 16rpx;
-  /* margin-top: 4rpx; */
-  float: left;
+.join-room .title{
+  padding: 20rpx;
 }
-.view-barrage .item .nickname {
-  color: #999;
-  float: left;
-  line-height: 40rpx;
-}
-.view-barrage .item .text {
-  width: 100%;
-  line-height: 40rpx;
-}
-
-
-
-.input-area {
-  position: fixed;
-  bottom: 0px;
-  height: 110rpx;
-  width: 100%;
-  background-color: #fff;
-  /* border: 1px solid #ff0000; */
+.join-room .input-group {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  /* border: 1px solid #f00; */
+  height: 90rpx;
+  width: 100%;
 }
-.input-area image {
-  height: 70rpx;
-  width: 70rpx;
-  margin-right: 30rpx;
-  margin-left: 30rpx;
-}
-.input-area input {
+.join-room .input-group input {
+  box-sizing: border-box;
   flex: 1;
-  background-color: #f2f2f2;
+  background-color: rgba(255,255,255,0.001);
+  border: 1rpx solid #27ae60;
+  border-right: 0px;
   font-size: 28rpx;
-  height: 65rpx;
-  border-radius: 65rpx; 
-  padding-left: 20rpx;
+  height: 100%;
+  border-top-left-radius: 90rpx;
+  border-bottom-left-radius: 90rpx;
+  padding-left: 35rpx;
   padding-right: 35rpx;
 }
-.input-area button {
-  height: 65rpx;
-  width: 90rpx;
-  border-radius: 65rpx;
+.join-room .input-group button {
+  box-sizing: border-box;
+  height: 100%;
+  width: 150rpx;
+  border-top-right-radius: 90rpx;
+  border-bottom-right-radius: 90rpx;
+  border-top-left-radius: 0rpx;
+  border-bottom-left-radius: 0rpx;
   border: 0rpx;
-  background-color: #fff;
+  /* background-color: #fff; */
   font-size: 28rpx;
   padding: 0rpx;
-  line-height: 65rpx;
-  margin-right: 30rpx;
-  margin-left: 20rpx;
+  line-height: 90rpx;
+  background-color: #27ae60;
+  color: #fff;
+  /* border: 2px solid #27ae60; */
+  border: 1rpx solid #27ae60;
+  border-left: 0px;
 }
-.input-area button:after {
-  border: 0rpx;
+.join-room .input-group button:after {
+  border: 0px;
+  border-radius: 0px;
 }
-.input-area button:active {
-  background-color: #eee;
+.join-room .input-group button:active {
+  background-color: #2ecc71;
 }

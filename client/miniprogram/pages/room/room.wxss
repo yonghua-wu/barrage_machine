@@ -1,0 +1,82 @@
+.view-barrage {
+  box-sizing: border-box;
+  width:100%;
+  height: calc(100vh - 110rpx);
+  font-size: 30rpx;
+  padding: 0rpx 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+.view-barrage .item {
+  padding: 10rpx 0rpx;
+  width: 100%;
+}
+.view-barrage .item image {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 16rpx;
+  /* margin-top: 4rpx; */
+  float: left;
+}
+.view-barrage .item .nickname {
+  color: #999;
+  float: left;
+  line-height: 40rpx;
+}
+.view-barrage .item .text {
+  width: 100%;
+  line-height: 40rpx;
+}
+
+
+
+.input-area {
+  position: fixed;
+  bottom: 0px;
+  height: 130rpx;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0rpx 0rpx 6rpx rgba(0, 0, 0, 0.1);
+  /* border: 1px solid #ff0000; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.input-area image {
+  height: 75rpx;
+  width: 75rpx;
+  margin-right: 30rpx;
+  margin-left: 30rpx;
+}
+.input-area input {
+  flex: 1;
+  background-color: #f2f2f2;
+  font-size: 30rpx;
+  height: 75rpx;
+  border-radius: 75rpx; 
+  padding-left: 30rpx;
+  padding-right: 30rpx;
+}
+.input-area input:focus {
+  border-bottom: 1rpx solid #27ae60;
+}
+.input-area button {
+  height: 75rpx;
+  width: 110rpx;
+  border-radius: 75rpx;
+  border: 0rpx;
+  /* background-color: #fff; */
+  font-size: 30rpx;
+  padding: 0rpx;
+  line-height: 75rpx;
+  margin-right: 30rpx;
+  margin-left: 30rpx;
+  background-color: #27ae60;
+  color: #fff;
+}
+.input-area button:after {
+  border: 0rpx;
+}
+.input-area button:active {
+  background-color: #2ecc71;
+}

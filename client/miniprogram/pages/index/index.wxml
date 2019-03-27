@@ -1,13 +1,8 @@
-<scroll-view class="view-barrage" scroll-top="{{bottomDist}}" scroll-y bindscroll="scrollScreen" bindscrolltolower="screenToLower">
-  <view class="item" wx:for="{{msgList}}" wx:key="{{index}}">
-    <image src="../../images/avatar.png" />
-    <view class="nickname">{{item.nickname}}：</view>
-    <view class="text">{{item.text}}</view>
+
+<view class="join-room">
+  <!-- <view class="title">加入一个房间</view> -->
+  <view class="input-group">
+    <input type="text" value="{{inputRoomNum}}" maxlength="6" confirm-type="go" bindconfirm="" placeholder="房间号" bindinput="" bindconfirm="joinRoom" bindinput="bindRoomNum"/>
+    <button class="btn" open-type="getUserInfo" bindgetuserinfo="joinRoom">加入</button>
   </view>
-  <view id="isBottom"> </view>
-</scroll-view>
-<view class="input-area">
-  <image src="../../images/avatar.png" />
-  <input type="text" value="{{inputMsg}}" cursor-spacing="20rpx" confirm-type="发送" bindconfirm="sendMsg" placeholder="发条弹幕呗~~~" bindinput="bindMsgText"/>
-  <button bindtap="sendMsg">发送</button>
 </view>
