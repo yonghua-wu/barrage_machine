@@ -23,9 +23,11 @@ Page({
   },
   joinRoom(e) {
     console.log(e)
+    
     // eslint-disable-next-line no-undef
     let userInfo = wx.getStorageSync('userInfo') || ''
     if (e.detail.userInfo) {
+      tips.showLoading()
       if(!userInfo) { // 如果本地缓存的userInfo是空的说明是第一次进入
         userInfo = {
           nickName: e.detail.userInfo.nickName,
@@ -36,16 +38,24 @@ Page({
         wx.setStorageSync('userInfo', userInfo)
         request.put('/user', userInfo) //提交信息到服务器
       }
-      if (this.data.inputRoomNum) { // 如果输入的不为空，检查这个房间是否在使用，在使用可以进入，未使用不能进入
+      if (this.data.inputRoomNum) { // 如果输入的不为空，检查这个房间是否在使用，在使用则进入，未使用不能进入
         request.get('/room', {
           roomNum: this.data.inputRoomNum
         }).then( () => {
+          tips.hideLoading()
           // 进入房间
           console.log('enter room')
+          // eslint-disable-next-line no-undef
+          wx.navigateTo({
+            url: '../room/room?room=' + this.data.inputRoomNum
+          })
         }).catch( () => {
+          tips.hideLoading()
           // 不进入房间，并提示房间未开放
           tips.showToast('fail', '房间未开放')
         })
+      } else {
+        tips.hideLoading()
       }
     } else {
       tips.showToast('warn', '请先授权信息')

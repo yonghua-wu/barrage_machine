@@ -1,11 +1,10 @@
+const tips = require('../../utils/tips.js')
+const config = require('../../utils/config.js')
 let timing = null
 // eslint-disable-next-line no-undef
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
+    userInfo: null,
     isEntryFromQr: false, // 是否通过二维码进入
     msgList: [],          // 弹幕列表
     bottomDist: 0,        // 页面底部距离
@@ -13,46 +12,47 @@ Page({
     roomNum: '',          // 当前房间号
     inputMsg: '',         // 输入的弹幕
     openSocket: false,    // 是否开启了Socket
-    joinedRoom: false,    // 是否已加入房间
     inputRoomNum: ''      // 当前输入的房间号
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-    let scene = decodeURIComponent(options.scene)
-    if (scene !== 'undefined' && scene !== undefined && scene !== null) {
-      scene = scene.toUpperCase()
-      console.log('房间号：', scene)
-      this.setData({
-        isEntryFromQr: true,
-        roomNum: scene
-      })
-      this.socket()
-      // eslint-disable-next-line no-undef
-      wx.setNavigationBarTitle({
-        title: '房间：' + scene
-      })
-    } else {
-      // eslint-disable-next-line no-undef
-      wx.setNavigationBarTitle({
-        title: '加入房间'
-      })
-    }
+  onLoad: function (query) {
+    tips.showLoading()
+    console.log(query.room)
+    this.setData({
+      isEntryFromQr: true,
+      roomNum: query.room,
+      userInfo: wx.getStorageSync('userInfo')
+    })
+    // eslint-disable-next-line no-undef
+    wx.setNavigationBarTitle({
+      title: '房间：' + query.room
+    })
+  },
+  onShow: function() {
+    this.socket()
+  },
+  onHide:function() {
+    wx.closeSocket()
+  },
+  onUnload: function () {
+    wx.closeSocket()
   },
   socket: function() {
     this.setData({
       // 开启websocket
-      openSocket: true,
-      joinedRoom: true
+      openSocket: true
     })
     let that = this
     // eslint-disable-next-line no-undef
     wx.connectSocket({
-      url: 'ws://192.168.1.103:8080/chat',
+      url: config.URL.wsUrl,
       header: {
         'content-type': 'application/json'
+      },
+      success: function () {
+        tips.showToast('success', '已进入房间')
+      },
+      fail: function() {
+        tips.showToast('fail', '连接失败')
       }
     })
     // eslint-disable-next-line no-undef
@@ -84,14 +84,14 @@ Page({
       bottomDist: 100000
     })
   },
-  scrollScreen() {
+  scrollScreen() {  //监听屏幕滑动事件，当屏幕滑动时，取消自动滚动
     if (this.data.keepBottomView) {
       this.setData({
         keepBottomView: false
       })
     }
   },
-  screenToLower() {
+  screenToLower() { //屏幕滑动到最底端时，设置自动滚动
     let that = this
     if (timing) {
       clearTimeout(timing)
@@ -114,9 +114,9 @@ Page({
     if (this.data.inputMsg == '') return
     let msg = {
       text: this.data.inputMsg,
-      nickname: '22',
+      nickname: this.data.userInfo.nickName,
       room_num: this.data.roomNum,
-      avatar_url: 'http'
+      avatar_url: this.data.userInfo.avatarUrl
     }
     msg = JSON.stringify(msg)
     // 判断是否已打开websocket通信

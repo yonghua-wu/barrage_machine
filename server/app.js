@@ -9,7 +9,7 @@ const WebSocketServer = WebSocket.Server
 app.use(bodyParser())
 app.use(regRouter())
 
-let server = app.listen(8080)
+let server = app.listen(18080)
 
 function createWebSocketServer(server, onMessage) {
   // 创建 WebSocketServer
@@ -26,7 +26,7 @@ function createWebSocketServer(server, onMessage) {
     console.log('[WebSocket] message received: ' + msg)
   }
   wss.on('connection', function (ws, req) {
-    if (req.url !== '/chat') {
+    if (req.url !== '/ws/chat') {
       ws.close(4000, 'Invalid URL')
     }
     ws.on('message', onMessage)
