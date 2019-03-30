@@ -4,7 +4,6 @@
       <view class="nickname">{{item.nickname}}：</view>
       <view class="text">{{item.text}}</view>
     </view>
-    <view id="isBottom"> </view>
   </scroll-view>
   <view class="input-area">
     <image src="{{userInfo.avatarUrl}}" />

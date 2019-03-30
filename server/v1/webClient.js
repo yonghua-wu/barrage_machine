@@ -1,12 +1,12 @@
 const router = require('koa-router')()
-const crypto = require('crypto')
 
-router.get('/api/v1/web', async (ctx) => {
-  const hash = crypto.createHash('md5')
-  let roomNum = hash.update(Date.now().toString() + 'dtsf23').digest('hex').slice(0,4)
+router.get('/api/v1/web/room', async (ctx) => {
   ctx.body = {
-    room_num: roomNum,
-    qrcode_url: '123'
+    status: 0,
+    result: {
+      room_num: 1,
+      qr_url: 'xxxx'
+    }
   }
 })
 module.exports = router

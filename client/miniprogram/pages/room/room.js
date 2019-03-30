@@ -20,6 +20,7 @@ Page({
     this.setData({
       isEntryFromQr: true,
       roomNum: query.room,
+      // eslint-disable-next-line no-undef
       userInfo: wx.getStorageSync('userInfo')
     })
     // eslint-disable-next-line no-undef
@@ -28,12 +29,12 @@ Page({
     })
   },
   onShow: function() {
-    this.socket()
-  },
-  onHide:function() {
-    wx.closeSocket()
+    if (!this.data.openSocket) {
+      this.socket()
+    }
   },
   onUnload: function () {
+    // eslint-disable-next-line no-undef
     wx.closeSocket()
   },
   socket: function() {
@@ -77,6 +78,12 @@ Page({
       if (that.data.keepBottomView) {
         that.toBottom()
       }
+    })
+    // eslint-disable-next-line no-undef
+    wx.onSocketClose(() => {
+      this.setData({
+        openSocket: false
+      })
     })
   },
   toBottom() {

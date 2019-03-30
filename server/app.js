@@ -1,10 +1,13 @@
 const Koa = require('koa')
+const cors = require('koa2-cors')
 const WebSocket = require('ws')
 const bodyParser = require('koa-bodyparser')
 // const url = require('url')
 const regRouter = require('./routers.js')
 const app = new Koa()
 const WebSocketServer = WebSocket.Server
+
+app.use(cors())
 
 app.use(bodyParser())
 app.use(regRouter())
@@ -42,4 +45,4 @@ function onMessage(message) {
 
 app.wss = createWebSocketServer(server, onMessage)
 
-console.log('app started at port 3000...')
+console.log('app started at port 18080...')
