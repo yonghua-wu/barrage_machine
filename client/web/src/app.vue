@@ -2,7 +2,7 @@
   <div>
     <input type="button" value="发送" @click="sendMsg">
     <barrage-area
-    :width="500"
+    :width="988"
     :height="500"
     :fontSize="20"></barrage-area>
   </div>
@@ -22,13 +22,12 @@ export default {
     }
   },
   mounted: function() {
-    console.log(window)
-    this.$http.get('/room').then(res => {
-      console.log(res.data)
-      if (res.data.status === 0) {
-        this.socketInit()
-      }
-    })
+    // this.$http.get('/room').then(res => {
+    //   console.log(res.data)
+    //   if (res.data.status === 0) {
+    //     this.socketInit()
+    //   }
+    // })
   },
   methods: {
     socketInit: function() {

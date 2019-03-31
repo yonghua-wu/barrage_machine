@@ -1,16 +1,17 @@
 <template>
-    <div class="text" :style="{ 'font-size': fontSize + 'px', 'animation-duration': duration + 'ms', 'width': width + 'px', 'top': top + 'px' }">
-      {{text}}
+    <div class="text"
+    :style="{ 'font-size': fontSize + 'px', 'animation-duration': duration + 'ms',  'top': top + 'px', 'width': width + 'px' }">
+      <span>{{text}}</span>
     </div>
 </template>
 <script>
 export default {
   props: {
     fontSize: Number,
-    text: Number,
+    text: String,
     duration: Number,
-    width: Number,
-    top: Number
+    top: Number,
+    width: Number
   }
 }
 </script>
@@ -20,13 +21,16 @@ export default {
   animation-name: shoot;
   animation-timing-function: linear;
   animation-iteration-count: 1;
+  right: 0px;
+  transform: translateX(100%);
 }
 @keyframes shoot {
   0% {
-    right: 0px;
+    
   }
   100% {
     right: 100%;
+    transform: translateX(-100%);
   }
 }
 </style>
