@@ -6,41 +6,57 @@
     :width="windowWidth"
     :height="windowHeight"
     :fontSize="textSize"></barrage-area>
-    <div class="tool-area">
-      <div class="tool">
-        <div class="title">字体大小</div>
-        <div class="ctrl">
-          <input class="button" type="button" value="-" @click="textSize--">
-          <div>{{textSize}}</div>
-          <input class="button" type="button" value="+" @click="textSize++">
-        </div>
-      </div>
-      <div class="tool">
-        <div class="title">颜色</div>
-        <div class="ctrl">
-          <input class="btn-text" :class="isDarkTheme?'':'active'" type="button" value="亮色" @click="isDarkTheme = false">
-          <input class="btn-text" :class="isDarkTheme?'active':''" type="button" value="暗色" @click="isDarkTheme = true">
-        </div>
-      </div>
-      <div class="tool">
-        <div class="title">主题文字</div>
-        <div class="ctrl">
-          <input class="input" type="text">
-          <input class="input-btn"  type="button" value="确定" >
-        </div>
-      </div>
-      <div class="tool">
-        <div class="title">房间编号</div>
-        <div class="ctrl">
-          <div>{{roomNum}}</div>
-        </div>
+    <div class="theme-text">
+      <div v-show="!showQR">{{themeText}}</div>
+      <div v-show="showQR">
+        <p style="font-size: 26px;">扫码发弹幕</p>
+        <canvas id="qr"></canvas>
       </div>
     </div>
+    <transition name="tool">
+      <div class="tool-area" v-show="!hideTool" @mouseenter="mouseEnter=true" @mouseleave="mouseEnter=false">
+        <div class="tool">
+          <div class="title">弹幕大小</div>
+          <div class="ctrl">
+            <input class="button" type="button" value="-" @click="textSize--">
+            <div>{{textSize}}</div>
+            <input class="button" type="button" value="+" @click="textSize++">
+          </div>
+        </div>
+        <div class="tool">
+          <div class="title">颜色</div>
+          <div class="ctrl">
+            <input class="btn-text" :class="isDarkTheme?'':'active'" type="button" value="亮色" @click="isDarkTheme = false">
+            <input class="btn-text" :class="isDarkTheme?'active':''" type="button" value="暗色" @click="isDarkTheme = true">
+          </div>
+        </div>
+        <div class="tool">
+          <div class="title">主题文字</div>
+          <div class="ctrl">
+            <input class="input" type="text" v-model="themeText" placeholder="编辑">
+          </div>
+        </div>
+        <div class="tool">
+          <div class="title">房间信息</div>
+          <div class="ctrl">
+            <div>{{roomNum}} 号房间</div>
+            <input class="btn-text" :class="showQR?'active':''" type="button" value="二维码" @click="showQR = !showQR">
+          </div>
+        </div>
+        <div class="tool">
+          <div class="title">屏幕</div>
+          <div class="ctrl">
+            <input class="btn-text" type="button" :value="ctrlScr?'退出全屏':'全屏'" @click="ctrlScr = !ctrlScr">
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 <script>
 import barrageArea from './components/barrage-area.vue'
 import config from './config.js'
+import QRcode from 'qrcode'
 let webSocket
 // let barr = [
 //   '你好',
@@ -64,9 +80,14 @@ export default {
       barrageIsShow: true,
       barrageLoop: false,
       roomNum: '--',
-      textSize: 26,
+      textSize: 30,
       isDarkTheme: true,
-      screenChange: 1
+      screenChange: 1,
+      themeText: '',
+      showQR: false,
+      hideTool: false,
+      mouseEnter: false,
+      ctrlScr: false
     }
   },
   mounted: function() {
@@ -74,6 +95,7 @@ export default {
       if (res.data.status === 0) {
         this.socketInit()
         this.roomNum = res.data.result.room_num.toString()
+        this.createQr()
       }
     })
     // addEventListener('keydown', (e) => {
@@ -85,7 +107,23 @@ export default {
     let that = this
     window.onresize = function(){
       that.screenChange++
+      setTimeout(() => {
+        that.ctrlScr = that.checkFull()
+        console.log(that.ctrlScr)
+      }, 200)
     }
+    document.onmousemove = function() {
+      window.lastMove = new Date().getTime()
+      that.hideTool = false
+    }
+    window.lastMove = new Date().getTime()
+    window.setInterval(function() {
+      if(that.mouseEnter || that.hideTool) return
+      var now = new Date().getTime()
+      if(now - window.lastMove > 2000) {
+        that.hideTool = true
+      }
+    }, 1000)
   },
   computed: {
     windowWidth: function () {
@@ -104,6 +142,16 @@ export default {
       }
       if(this.textSize < 12) {
         this.textSize = 12
+      }
+    },
+    isDarkTheme: function() {
+      this.createQr()
+    },
+    ctrlScr: function() {
+      if (this.ctrlScr) {
+        this.fullScreen()
+      } else {
+        this.exitFullScreen()
       }
     }
   },
@@ -145,6 +193,29 @@ export default {
         rfs.call(el)
       }
       return
+    },
+    exitFullScreen: function() {
+      var el = document
+      var cfs = el.cancelFullScreen || el.webkitCancelFullScreen ||
+          el.mozCancelFullScreen || el.exitFullScreen
+      if (cfs) { //typeof cfs != "undefined" && cfs
+        cfs.call(el)
+      }
+    },
+    checkFull: function() {
+      return document.isFullScreen || document.mozIsFullScreen || document.webkitIsFullScreen
+    },
+    createQr: function() {
+      let qr = document.getElementById('qr')
+      let val = config.host + '?room=' + this.roomNum
+      QRcode.toCanvas(qr, val, {
+        margin: 4,
+        width: 360,
+        color: {
+          light: '#ffffff00',
+          dark: this.isDarkTheme ? '#ffffffff' : '#000000ff'
+        }
+      })
     }
   }
 }
@@ -182,6 +253,20 @@ body {
 .light {
   background-color: #e0e0e0;
   color: #333;
+}
+.theme-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  text-align: center;
+  font-size: 40px;
+  opacity: 0.4;
+  #qr {
+    width: 400px;
+    height: 400px;
+  }
 }
 .tool-area {
   display: flex;
@@ -260,34 +345,22 @@ body {
         box-sizing: border-box;
         height: 30px;
         width: 140px;
-        border-top-left-radius: 8px;
-        border-bottom-left-radius: 8px;
+        border-radius: 8px;
         border: 1px solid #888;
-        border-right: 0px;
         background-color: rgba($color: #000000, $alpha: 0);
         padding: 5px;
         &:focus {
           outline: unset;
         }
       }
-      .input-btn {
-        height: 30px;
-        padding: 0 10px;
-        background-color: #ffffff00;
-        border: 1px solid #888;
-        border-top-right-radius: 8px;
-        border-bottom-right-radius: 8px;
-        color: #333;
-        cursor: pointer;
-        &:focus {
-          outline: unset;
-        }
-        &:active {
-          border: 1px solid #000;
-        }
-      }
     }
   }
+}
+.tool-enter-active, .tool-leave-active {
+  transition: opacity .5s;
+}
+.tool-enter, .tool-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 barrage-area {
   position: absolute;
