@@ -76,18 +76,15 @@ export default {
   },
   data: function() {
     return {
-      barrageList: [],
-      barrageIsShow: true,
-      barrageLoop: false,
-      roomNum: '--',
-      textSize: 30,
-      isDarkTheme: true,
-      screenChange: 1,
-      themeText: '',
-      showQR: false,
-      hideTool: false,
-      mouseEnter: false,
-      ctrlScr: false
+      roomNum: '--',      // 房间号
+      textSize: 30,       // 弹幕字体大小
+      isDarkTheme: true,  // 是否使用暗色主题
+      screenChange: 1,    // 监听屏幕大小改变
+      themeText: '',      // 主题文字
+      showQR: false,      // 是否展示二维码
+      hideTool: false,    // 是否隐藏tool区
+      mouseEnter: false,  // 鼠标是否在tool区
+      ctrlScr: false      // 控制屏幕是否全屏
     }
   },
   mounted: function() {
@@ -105,18 +102,18 @@ export default {
     //   }
     // })
     let that = this
+    // 监听窗口大小改变
     window.onresize = function(){
       that.screenChange++
-      setTimeout(() => {
-        that.ctrlScr = that.checkFull()
-        console.log(that.ctrlScr)
-      }, 200)
+      that.ctrlScr = that.checkFull()
     }
+    window.lastMove = new Date().getTime()
+    // 监听鼠标移动
     document.onmousemove = function() {
       window.lastMove = new Date().getTime()
       that.hideTool = false
     }
-    window.lastMove = new Date().getTime()
+    // 当鼠标不动超过2秒，并且鼠标不在tool区时，隐藏tool区
     window.setInterval(function() {
       if(that.mouseEnter || that.hideTool) return
       var now = new Date().getTime()
@@ -173,6 +170,7 @@ export default {
         if(!msg.room_num || msg.room_num != that.roomNum) {
           return 
         }
+        // 发送这条弹幕
         that.shootMsg(msg)
       }
       /* 关闭时 */
@@ -181,11 +179,13 @@ export default {
       }
     },
     shootMsg: function(msg) {
+      // 发送弹幕
       this.$refs.barrage_area.shoot(msg.text)
       // setInterval(() => {
       //   this.$refs.barrageArea.shoot(barr[parseInt(Math.random()*10)])
       // }, 100)
     },
+    // 全屏
     fullScreen: function(){
       var el = document.documentElement
       var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen      
@@ -194,6 +194,7 @@ export default {
       }
       return
     },
+    // 退出全屏
     exitFullScreen: function() {
       var el = document
       var cfs = el.cancelFullScreen || el.webkitCancelFullScreen ||
@@ -202,9 +203,11 @@ export default {
         cfs.call(el)
       }
     },
+    // 检查屏幕是否全屏
     checkFull: function() {
       return document.isFullScreen || document.mozIsFullScreen || document.webkitIsFullScreen
     },
+    // 生成二维码
     createQr: function() {
       let qr = document.getElementById('qr')
       let val = config.host + '?room=' + this.roomNum
@@ -221,7 +224,6 @@ export default {
 }
 </script>
 <style lang="scss">
-
 body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0;}
 h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
 address,cite,dfn,em,var{font-style:normal;}

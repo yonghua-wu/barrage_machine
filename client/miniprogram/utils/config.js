@@ -6,7 +6,7 @@ module.exports = {
     // loginUrl: '/user'
     main_host: 'http://localhost:18080/',
     host: 'http://localhost:18080/api/v1/mini',
-    wsUrl: 'ws://localhost:18080/ws/chat',
+    wsUrl: 'ws://192.168.1.105:18080/ws/chat',
     loginUrl: '/user'
   }
 }
