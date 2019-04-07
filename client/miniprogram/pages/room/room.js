@@ -129,9 +129,11 @@ Page({
     // 判断是否已打开websocket通信
     if (this.data.openSocket) {
       // eslint-disable-next-line no-undef
-      wx.sendSocketMessage({
-        data: msg
-      })
+      for(let i=0; i<10; i++) {
+        wx.sendSocketMessage({
+          data: msg
+        })
+      }
     }
     this.setData({
       inputMsg: ''
