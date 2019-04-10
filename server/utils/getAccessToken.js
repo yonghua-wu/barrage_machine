@@ -1,31 +1,7 @@
-const redis = require('redis')
 // const util = require('util')
-const rp = require('request-promise')
 const config = require('../config.js')
-let redisClient = redis.createClient(config.redis.port, config.redis.host, {password: config.redis.password})
-
-function redisSetEx(key, value, time=0) {
-  return new Promise((resolve, reject) => {
-    redisClient.set(key, value, 'EX', time, (err, res) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(res)
-      }
-    })
-  })
-}
-function redisGet(key) {
-  return new Promise((resolve, reject) => {
-    redisClient.get(key, (err, res) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(res)
-      }
-    })
-  })
-}
+const rp = require('request-promise')
+const redisClient = require('./redisClient.js')
 /**
  * 获取AccessToken
  * @returns {object} 
@@ -33,7 +9,7 @@ function redisGet(key) {
 async function getAccessToken() {
   let token
   try {
-    token = await redisGet('AccessToken')
+    token = await redisClient.redisGet('AccessToken')
   } catch(err) {
     return {
       err: err,
@@ -53,7 +29,7 @@ async function getAccessToken() {
     }
     req = JSON.parse(req)
     try {
-      await redisSetEx('AccessToken', req.access_token, req.expires_in)
+      await redisClient.redisSetEx('AccessToken', req.access_token, req.expires_in)
     } catch(err) {
       return {
         err: err,

@@ -7,7 +7,12 @@ const regRouter = require('./routers.js')
 const app = new Koa()
 const WebSocketServer = WebSocket.Server
 
-app.use(cors())
+app.use(cors({
+  origin: function() {
+    return '*'
+  },
+  maxAge: 1728000
+}))
 
 app.use(bodyParser())
 app.use(regRouter())
