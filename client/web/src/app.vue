@@ -39,7 +39,7 @@
         <div class="tool">
           <div class="title">房间信息</div>
           <div class="ctrl">
-            <div>{{roomNum}} 号房间</div>
+            <div>{{roomNum}}号</div>
             <input class="btn-text" :class="showQR?'active':''" type="button" value="二维码" @click="showQR = !showQR">
           </div>
         </div>
@@ -81,7 +81,7 @@ export default {
       isDarkTheme: true,  // 是否使用暗色主题
       screenChange: 1,    // 监听屏幕大小改变
       themeText: '',      // 主题文字
-      showQR: false,      // 是否展示二维码
+      showQR: true,      // 是否展示二维码
       hideTool: false,    // 是否隐藏tool区
       mouseEnter: false,  // 鼠标是否在tool区
       ctrlScr: false      // 控制屏幕是否全屏
@@ -93,6 +93,7 @@ export default {
         this.socketInit()
         this.roomNum = res.data.result.room_num.toString()
         this.createQr()
+        this.holdonRoom()
       }
     })
     // addEventListener('keydown', (e) => {
@@ -121,6 +122,9 @@ export default {
         that.hideTool = true
       }
     }, 1000)
+    window.onbeforeunload = function(){
+      that.$http.delete('/room?room_num=' + that.roomNum)
+    }
   },
   computed: {
     windowWidth: function () {
@@ -219,6 +223,17 @@ export default {
           dark: this.isDarkTheme ? '#ffffffff' : '#000000ff'
         }
       })
+    },
+    holdonRoom: function() {
+      setInterval(() => {
+        this.$http.patch('/room', {
+          room_num: this.roomNum
+        }).then(req => {
+          console.log(req)
+        }).catch(req => {
+          console.log(req)
+        })
+      }, 1000*60*4)
     }
   }
 }

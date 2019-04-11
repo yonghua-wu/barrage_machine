@@ -14,12 +14,50 @@ function pin(rand) {
 }
 
 router.get('/api/v1/web/room', async (ctx) => {
-  ctx.body = {
-    status: 0,
-    result: {
-      room_num: 1,
-      qr_url: 'xxxx'
+  let roomNum = await roomInfo.useRoom()
+  if (roomNum) {
+    ctx.body = {
+      status: 0,
+      result: {
+        room_num: roomNum
+      }
     }
+  } else {
+    ctx.body = {
+      status: -1,
+      result: {},
+      msg: '创建房间失败'
+    }
+  }
+})
+router.patch('/api/v1/web/room', async (ctx) => {
+  var roomNum = ctx.request.body.room_num
+  if (roomNum) {
+    if (await roomInfo.holdon(roomNum)) {
+      ctx.body = {
+        status: 0,
+        result: {}
+      }
+    } else {
+      ctx.body = {
+        status: -1,
+        result: {},
+        msg: '房间不存在'
+      }
+    }
+  } else {
+    ctx.body = {
+      status: -1,
+      result: {},
+      msg: '参数错误'
+    }
+  }
+})
+router.delete('/api/v1/web/room', async (ctx) => {
+  console.log(ctx.request.query.room_num)
+  let roomNum = ctx.request.query.room_num
+  if (roomNum) {
+    roomInfo.freeRoom(roomNum)
   }
 })
 router.get('/api/v1/web/img', async (ctx) => {

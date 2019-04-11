@@ -44,10 +44,78 @@ function redisGet(key) {
  * @param {Number} time 时间，以毫秒记
  * @return {Promise}
  */
-function redisPexpire(key, time) {
+function redisExpire(key, time) {
   return new Promise((resolve, reject) => {
-    redisClient.pexpire(key, time, (err, res) => {
+    redisClient.expire(key, time, (err, res) => {
       if (err) {
+        reject(err)
+      } else {
+        resolve(res)
+      }
+    })
+  })
+}
+
+/**
+ * 删除key
+ * @param {String} key 要删除的key
+ */
+function redisDel(key) {
+  return new Promise((resolve, reject) => {
+    redisClient.del(key, (err, res) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(res)
+      }
+    })
+  })
+}
+
+/**
+ * 获取列表长度
+ * @param {String} key 列表名字
+ * @return {Promise}
+ */
+function redisLlen(key) {
+  return new Promise((resolve, reject) => {
+    redisClient.llen(key, (err, res) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(res)
+      }
+    })
+  })
+}
+
+/**
+ * 将一个或多个值插入到key的右边
+ * @param {String} key 列表名字
+ * @param {String | String[]} values 列表值
+ * @return {Promise}
+ */
+function redisRpush(key, values) {
+  return new Promise((resolve, reject) => {
+    redisClient.rpush(key, values, (err, res) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(res)
+      }
+    })
+  })
+}
+
+/**
+ * 返回并删除列表的第一个值
+ * @param {String} key 列表名字
+ * @return {Promise}
+ */
+function redisLpop(key) {
+  return new Promise((resolve, reject) => {
+    redisClient.lpop(key, (err, res) => {
+      if(err) {
         reject(err)
       } else {
         resolve(res)
@@ -59,5 +127,9 @@ function redisPexpire(key, time) {
 module.exports = {
   redisGet,
   redisSetEx,
-  redisPexpire
+  redisExpire,
+  redisLlen,
+  redisRpush,
+  redisLpop,
+  redisDel
 }
