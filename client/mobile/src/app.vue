@@ -35,8 +35,8 @@ mark{background:#ff0;}
   display: flex;
   flex-direction: column;
 }
-.flex-x-center {
-  justify-content: center;
+.flex-x-between {
+  justify-content: space-between
 }
 .flex-y-center {
   align-items: center;

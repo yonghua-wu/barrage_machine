@@ -28,7 +28,9 @@ async function regist(roomNum) {
     if (await select(roomNum)) {
       return false
     } else {
-      await redisClient.redisSetEx(roomNum, 1, 60*5)
+      await redisClient.redisSetEx(roomNum, 1, 25)
+      await sevaUser(roomNum, '`')
+      await redisClient.redisExpire('users' + roomNum, 25)
       return true
     }
   } catch (e) {
@@ -42,7 +44,8 @@ async function regist(roomNum) {
  */
 async function holdon(roomNum) {
   try {
-    await redisClient.redisExpire(roomNum, 60*5)
+    await redisClient.redisExpire(roomNum, 25)
+    await redisClient.redisExpire('users' + roomNum, 25)
     return true
   } catch (e) {
     return false
@@ -91,10 +94,46 @@ async function freeRoom(roomNum) {
   await redisClient.redisDel(roomNum)
 }
 
+/**
+ * 保存用户昵称
+ * @param {String} roomNum 房间号
+ * @param {String} nickname 昵称
+ */
+async function sevaUser(roomNum, nickname) {
+  let key = 'users' + roomNum
+  if (await redisClient.redisSadd(key, nickname)) {
+    return true
+  } else {
+    return false
+  }
+}
+
+/**
+ * 抽奖
+ * @param {String} roomNum 房间号
+ */
+async function lottery(roomNum) {
+  try {
+    if( await redisClient.redisScard('users'+roomNum) == 1) {
+      return false
+    } else {
+      let nickname
+      do {
+        nickname = await redisClient.redisSrandmember('users'+roomNum)
+      } while(nickname == '`')
+      return nickname
+    }
+  } catch(e) {
+    return false
+  }
+}
+
 module.exports = {
   select,
   regist,
   holdon,
   useRoom,
-  freeRoom
+  freeRoom,
+  sevaUser,
+  lottery
 }

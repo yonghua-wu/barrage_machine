@@ -214,13 +214,14 @@ export default {
     // 生成二维码
     createQr: function() {
       let qr = document.getElementById('qr')
-      let val = config.host + '?room=' + this.roomNum
+      let val = config.mobileHost + '?room=' + this.roomNum
       QRcode.toCanvas(qr, val, {
-        margin: 4,
+        margin: 3,
         width: 360,
         color: {
-          light: '#ffffff00',
-          dark: this.isDarkTheme ? '#ffffffff' : '#000000ff'
+          light: this.isDarkTheme ? '#ffffffdd' : '#ffffff00',
+          // dark: '#ffffff00'
+          dark: this.isDarkTheme ? '#ffffff00' : '#000000ff'
         }
       })
     },
@@ -233,7 +234,7 @@ export default {
         }).catch(req => {
           console.log(req)
         })
-      }, 1000*60*4)
+      }, 1000*20)
     }
   }
 }
@@ -279,8 +280,9 @@ body {
   width: 80%;
   text-align: center;
   font-size: 40px;
-  opacity: 0.4;
+  opacity: 0.65;
   #qr {
+    margin-top: 20px;
     width: 400px;
     height: 400px;
   }

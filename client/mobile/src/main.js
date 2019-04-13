@@ -10,6 +10,16 @@ Vue.prototype.$http = axios.create({
   timeout: 10000
 })
 
+router.beforeEach((to, from, next) => {
+  console.log(to)
+  console.log(from)
+  if (to.path == '/index' && (!store.state.roomNum || !store.state.nickname)) {
+    next('/')
+  } else {
+    next()
+  }
+})
+
 new Vue({
   store,
   router,

@@ -14,7 +14,8 @@ module.exports = {
   devServer: {
     // eslint-disable-next-line no-undef
     contentBase: __dirname + '/dist',
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    port: '8081'
   },
   module: {
     rules: [

@@ -5,7 +5,7 @@
     :arrow-bottom="80"
     v-on:close="close()"
     >
-      {{nickname}}
+      昵称：{{nickname}}
     </modal>
   </div>
 </template>

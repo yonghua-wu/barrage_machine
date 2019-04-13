@@ -28,7 +28,7 @@ export default {
     createQr: function() {
       let qr = document.getElementById('qr')
       let width = qr.parentNode.clientWidth - 20
-      let val = config.host + '?room=' + this.roomNum
+      let val = config.mobileHost + '?room=' + this.roomNum
       QRcode.toCanvas(qr, val, {
         margin: 2,
         width: width,

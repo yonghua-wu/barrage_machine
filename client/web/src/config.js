@@ -1,4 +1,5 @@
 export default {
-  host: 'http://localhost:18080/api/v1/web',
-  websocket: 'ws://localhost:18080/ws/chat'
+  host: 'https://woxiangchixingxing.com/api/v1/web',
+  websocket: 'wss://woxiangchixingxing.com/ws/chat',
+  mobileHost: 'https://woxiangchixingxing.com/mobile/#/'
 }

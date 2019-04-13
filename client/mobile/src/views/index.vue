@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="room-info" @click="clickRoom()">
-      <div class="num">1</div>
+      <div class="num">{{roomNum}}</div>
       <div class="text">房间</div>
     </div>
     <div class="user-info" @click="clickUser()">
@@ -18,7 +18,7 @@
       <input class="button" type="button" value="发送" @click="sendMsg()">
     </div>
     <transition name="fade">
-      <user v-if="showUser" nickname="昵称"></user>
+      <user v-if="showUser" :nickname="nickname"></user>
       <room v-if="showRoom" :room-num="roomNum"></room>
     </transition>
     
@@ -41,9 +41,7 @@ export default {
   data: function() {
     return {
       barrageList: [],
-      roomNum: '1',
       inputText: '',
-      nickname: '昵称'
     }
   },
   mounted: function() {
@@ -52,7 +50,9 @@ export default {
   computed: {
     ...mapState([
       'showUser',
-      'showRoom'
+      'showRoom',
+      'roomNum',
+      'nickname'
     ])
   },
   methods: {

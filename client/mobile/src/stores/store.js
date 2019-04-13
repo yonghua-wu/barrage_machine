@@ -7,6 +7,8 @@ export default new Vuex.Store({
   state: {
     showRoom: false,
     showUser: false,
+    roomNum: '',
+    nickname: ''
   },
   mutations: {
     notShowRoom: state => {
@@ -22,6 +24,12 @@ export default new Vuex.Store({
     isShowUser: state => {
       state.showUser = true
       state.showRoom = false
+    },
+    setRoomNum: (state, n) => {
+      state.roomNum = n
+    },
+    setNickname: (state, n) => {
+      state.nickname = n
     }
   }
 })

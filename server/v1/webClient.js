@@ -53,13 +53,41 @@ router.patch('/api/v1/web/room', async (ctx) => {
     }
   }
 })
+
+router.get('/api/v1/web/lottery', async (ctx) => {
+  let roomNum = ctx.request.query.room_num
+  if (roomNum) {
+    let nickname = await roomInfo.lottery(roomNum)
+    if (nickname) {
+      ctx.body = {
+        status: 0,
+        result: {
+          nickname: nickname
+        }
+      }
+    } else {
+      ctx.body = {
+        status: -1,
+        result: {},
+        msg: '无人参与抽奖'
+      }
+    }
+  } else {
+    ctx.body = {
+      status: -1,
+      result: {},
+      msg: '参数错误'
+    }
+  }
+})
+
 router.delete('/api/v1/web/room', async (ctx) => {
-  console.log(ctx.request.query.room_num)
   let roomNum = ctx.request.query.room_num
   if (roomNum) {
     roomInfo.freeRoom(roomNum)
   }
 })
+
 router.get('/api/v1/web/img', async (ctx) => {
   var rand = ctx.request.query.rand
   var str = pin(rand)
@@ -76,18 +104,26 @@ router.get('/api/v1/web/img', async (ctx) => {
 })
 
 router.post('/api/v1/web/login_room', async (ctx) => {
-  var query = ctx.request.body.data
-  if (pin(query.rand) != query.pin) {
+  var data = ctx.request.body
+  if (pin(data.rand) != data.pin) {
     ctx.body = {
       status: 20,
       result: {},
       msg: '验证码错误'
     }
   }else {
-    if(await roomInfo.select(query.roomNum)) {
-      ctx.body = {
-        status: 0,
-        result: {}
+    if(await roomInfo.select(data.roomNum)) {
+      if ( data.notNewUser || await roomInfo.sevaUser(data.roomNum, data.nickname)) {
+        ctx.body = {
+          status: 0,
+          result: {}
+        }
+      } else {
+        ctx.body = {
+          status: -1,
+          result: {},
+          msg: '昵称已被占用'
+        }
       }
     } else {
       ctx.body = {

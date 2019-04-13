@@ -5,7 +5,7 @@ let redisClient = redis.createClient(config.redis.port, config.redis.host, {pass
 /**
  * 设置redis键值，并设置过期时间
  * @param {String} key 设置的键
- * @param {String, Number} value 设置的值
+ * @param {String | Number} value 设置的值
  * @param {Number} time 缓存多久
  * @return {Promise}
  */
@@ -124,6 +124,73 @@ function redisLpop(key) {
   })
 }
 
+/**
+ * 将一个或多个值插入到key集合中
+ * @param {String} key
+ * @param {String | String[]} values
+ */
+function redisSadd(key, values) {
+  return new Promise((resolve, reject) => {
+    redisClient.sadd(key, values, (err, res) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(res)
+      }
+    })
+  })
+}
+
+/**
+ * 判断member是否在集合key中
+ * @param {String} key
+ * @param {String} member
+ */
+function redisSismember(key, member) {
+  return new Promise((resolve, reject) => {
+    redisClient.sismember(key, member, (err, res) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(res)
+      }
+    })
+  })
+}
+
+/**
+ * 随机从key集合中取出一个元素
+ * @param {String} key
+ */
+function redisSrandmember(key) {
+  return new Promise((resolve, reject) => {
+    redisClient.srandmember(key, (err, res) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(res)
+      }
+    })
+  })
+}
+
+/**
+ * 获取集合元素的个数
+ * @param {String} key
+ */
+function redisScard(key) {
+  return new Promise((resolve, reject) => {
+    redisClient.scard(key, (err, res) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(res)
+      }
+    })
+  })
+}
+
+
 module.exports = {
   redisGet,
   redisSetEx,
@@ -131,5 +198,9 @@ module.exports = {
   redisLlen,
   redisRpush,
   redisLpop,
-  redisDel
+  redisDel,
+  redisSadd,
+  redisSismember,
+  redisSrandmember,
+  redisScard
 }
